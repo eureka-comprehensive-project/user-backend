@@ -47,7 +47,7 @@ clean {
 }
 
 tasks.named('bootJar') {
-    mainClass.set('com/gram/eureka/eureka_gram_user/EurekaGramUserApplication.java') // Main 클래스 경로 설정
+    mainClass.set('com/comprehensive/eureka/user/UserApplication.java') // Main 클래스 경로 설정
 }
 
 tasks.named('compileJava') {
