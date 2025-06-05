@@ -10,6 +10,6 @@ public class HealthCheckController {
 
     @GetMapping("/healthCheck")
     public String healthCheck() {
-        return "user 25.06.03";
+        return "user 25.06.05";
     }
 }
