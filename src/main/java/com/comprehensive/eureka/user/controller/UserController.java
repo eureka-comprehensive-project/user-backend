@@ -7,10 +7,9 @@ import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDt
 import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
 import com.comprehensive.eureka.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
 
 @RequestMapping("/user")
 @RestController
@@ -28,5 +27,11 @@ public class UserController {
     public BaseResponseDto<GetUserProfileDetailResponseDto> getUserProfileDetail(@RequestBody GetByIdRequestDto getByIdRequestDto) {
         GetUserProfileDetailResponseDto getUserProfileDetailResponseDto = userService.getUserProfileDetail(getByIdRequestDto);
         return BaseResponseDto.success(getUserProfileDetailResponseDto);
+    }
+
+    @GetMapping("/{userId}/birthday")
+    public BaseResponseDto<LocalDate> getUserBirthday(@PathVariable Long userId) {
+        LocalDate birthday = userService.getUserBirthday(userId);
+        return BaseResponseDto.success(birthday);
     }
 }
