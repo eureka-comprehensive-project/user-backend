@@ -34,4 +34,11 @@ public class UserController {
         LocalDate birthday = userService.getUserBirthday(userId);
         return BaseResponseDto.success(birthday);
     }
+
+    @PutMapping("/{userId}/status")
+    public BaseResponseDto<Void> updateUserStatus(@PathVariable Long userId){
+        userService.updateUserStatus(userId);
+        return BaseResponseDto.success(null);
+    }
+
 }
