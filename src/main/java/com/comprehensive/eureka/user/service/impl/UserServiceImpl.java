@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -60,5 +61,12 @@ public class UserServiceImpl implements UserService {
                 userRepository.findById(getByIdRequestDto.getId()).orElseThrow(
                         UserNotFoundException::new)
         );
+    }
+
+    @Override
+    public LocalDate getUserBirthday(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+        return user.getBirthday();
     }
 }

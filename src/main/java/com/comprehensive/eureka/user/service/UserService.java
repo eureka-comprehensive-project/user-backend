@@ -8,6 +8,8 @@ import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDt
 import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
 import com.comprehensive.eureka.user.dto.response.GetUserResponseDto;
 
+import java.time.LocalDate;
+
 public interface UserService {
     CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto);
 
@@ -16,4 +18,6 @@ public interface UserService {
     GetUserProfileResponseDto getUserProfile(GetByIdRequestDto getByIdRequestDto);
 
     GetUserProfileDetailResponseDto getUserProfileDetail(GetByIdRequestDto getByIdRequestDto);
+
+    LocalDate getUserBirthday(Long userId);
 }
