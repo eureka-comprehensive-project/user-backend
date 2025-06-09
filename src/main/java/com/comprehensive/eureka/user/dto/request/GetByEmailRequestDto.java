@@ -3,6 +3,6 @@ package com.comprehensive.eureka.user.dto.request;
 import lombok.Data;
 
 @Data
-public class GetByEmailRequest {
+public class GetByEmailRequestDto {
     private String email;
 }
