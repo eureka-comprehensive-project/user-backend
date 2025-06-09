@@ -1,7 +1,7 @@
 package com.comprehensive.eureka.user.controller;
 
 import com.comprehensive.eureka.user.dto.request.CreateUserRequestDto;
-import com.comprehensive.eureka.user.dto.request.GetByEmailRequest;
+import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.response.CreateUserResponseDto;
 import com.comprehensive.eureka.user.dto.response.GetUserResponseDto;
 import com.comprehensive.eureka.user.dto.base.BaseResponseDto;
@@ -22,7 +22,7 @@ public class AuthController {
     }
 
     @PostMapping("/email")
-    public BaseResponseDto<GetUserResponseDto> getByEmail(@RequestBody GetByEmailRequest getByEmailRequest) {
+    public BaseResponseDto<GetUserResponseDto> getByEmail(@RequestBody GetByEmailRequestDto getByEmailRequest) {
         GetUserResponseDto getUserResponseDto = userService.findUserByEmail(getByEmailRequest);
         return BaseResponseDto.success(getUserResponseDto);
     }
