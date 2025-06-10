@@ -20,4 +20,6 @@ public interface UserService {
     GetUserProfileDetailResponseDto getUserProfileDetail(GetByIdRequestDto getByIdRequestDto);
 
     LocalDate getUserBirthday(Long userId);
+
+    void updateUserStatus(Long userId);
 }
