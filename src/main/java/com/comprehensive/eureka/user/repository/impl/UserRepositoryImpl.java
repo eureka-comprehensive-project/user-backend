@@ -1,12 +1,15 @@
 package com.comprehensive.eureka.user.repository.impl;
 
+import com.comprehensive.eureka.user.dto.response.UserInfoResponseDto;
 import com.comprehensive.eureka.user.entity.User;
 import com.comprehensive.eureka.user.entity.enums.Status;
 import com.comprehensive.eureka.user.repository.custom.UserRepositoryCustom;
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.comprehensive.eureka.user.entity.QUser.user;
@@ -26,5 +29,27 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         )
                         .fetchOne()
         );
+    }
+
+    @Override
+    public List<UserInfoResponseDto> searchUsersBySearchWord(String searchWord) {
+        return queryFactory
+                .select(Projections.constructor(
+                        UserInfoResponseDto.class,
+                        user.id,
+                        user.email,
+                        user.name,
+                        user.phone,
+                        user.birthday,
+                        user.createdAt,
+                        user.status,
+                        user.unbanTime
+                ))
+                .from(user)
+                .where(
+                        user.name.containsIgnoreCase(searchWord)
+                                .or(user.email.containsIgnoreCase(searchWord))
+                )
+                .fetch();
     }
 }

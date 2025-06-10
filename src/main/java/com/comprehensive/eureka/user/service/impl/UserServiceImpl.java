@@ -3,10 +3,7 @@ package com.comprehensive.eureka.user.service.impl;
 import com.comprehensive.eureka.user.dto.request.CreateUserRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
-import com.comprehensive.eureka.user.dto.response.CreateUserResponseDto;
-import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDto;
-import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
-import com.comprehensive.eureka.user.dto.response.GetUserResponseDto;
+import com.comprehensive.eureka.user.dto.response.*;
 import com.comprehensive.eureka.user.entity.User;
 import com.comprehensive.eureka.user.exception.UserNotFoundException;
 import com.comprehensive.eureka.user.repository.UserRepository;
@@ -16,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -76,5 +74,10 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new);
 
         user.changeStatus();
+    }
+
+    @Override
+    public List<UserInfoResponseDto> searchUsers(String searchWord) {
+        return userRepository.searchUsersBySearchWord(searchWord);
     }
 }
