@@ -34,6 +34,6 @@ public class UserDataRecord {
     @Column(name = "call_usage")
     private Integer callUsage;
 
-    @Column(name = "year_month", length = 10)
+    @Column(name = "year_month_value", length = 10)
     private String yearMonth; // 형식: "2025-06"
 }
