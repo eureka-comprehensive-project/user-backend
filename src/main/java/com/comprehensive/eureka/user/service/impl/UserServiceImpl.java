@@ -69,4 +69,12 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(UserNotFoundException::new);
         return user.getBirthday();
     }
+
+    @Override
+    public void updateUserStatus(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(UserNotFoundException::new);
+
+        user.changeStatus();
+    }
 }
