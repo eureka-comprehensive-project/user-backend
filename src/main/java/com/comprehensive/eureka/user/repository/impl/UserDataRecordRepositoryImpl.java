@@ -16,19 +16,21 @@ public class UserDataRecordRepositoryImpl implements UserDataRecordRepositoryCus
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<UserDataRecordResponseDto> findRecentDataUsageByUserId(Long userId) {
+    public List<UserDataRecordResponseDto> findUserUsage(Long userId, int monthCount) {
         return queryFactory
                 .select(Projections.constructor(
                         UserDataRecordResponseDto.class,
                         userDataRecord.user.id,
                         userDataRecord.dataUsage,
                         userDataRecord.dataUsageUnit,
+                        userDataRecord.messageUsage,
+                        userDataRecord.callUsage,
                         userDataRecord.yearMonth
                 ))
                 .from(userDataRecord)
                 .where(userDataRecord.user.id.eq(userId))
                 .orderBy(userDataRecord.yearMonth.desc())
-                .limit(6)
+                .limit(monthCount)
                 .fetch();
     }
 }
