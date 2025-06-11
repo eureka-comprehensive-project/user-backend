@@ -5,6 +5,7 @@ import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
 import com.comprehensive.eureka.user.dto.response.*;
 import com.comprehensive.eureka.user.entity.User;
+import com.comprehensive.eureka.user.exception.EmailAlreadyExistsException;
 import com.comprehensive.eureka.user.exception.UserNotFoundException;
 import com.comprehensive.eureka.user.repository.UserRepository;
 import com.comprehensive.eureka.user.service.UserService;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
     public CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto) {
         Optional<User> optionalUser = userRepository.findUserByEmailAndStatus(createUserRequestDto.getEmail());
         if (optionalUser.isPresent()) {
-            throw new RuntimeException("중복된 email 입니다.");
+            throw new EmailAlreadyExistsException();
         }
 
         User user = userRepository.save(CreateUserRequestDto.toEntity(createUserRequestDto));
@@ -39,9 +40,7 @@ public class UserServiceImpl implements UserService {
     public GetUserResponseDto findUserByEmail(GetByEmailRequestDto getByEmailRequest) {
         return GetUserResponseDto.from(
                 userRepository.findUserByEmailAndStatus(getByEmailRequest.getEmail()).orElseThrow(
-                        // TODO Exception 다른걸로 변경 필요
-                        () -> new RuntimeException("user 를 찾는중에 오류가 발생하였습니다.")
-                )
+                        UserNotFoundException::new)
         );
     }
 
