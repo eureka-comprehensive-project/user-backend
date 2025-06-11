@@ -5,11 +5,13 @@ import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
+import com.comprehensive.eureka.user.dto.response.UserInfoResponseDto;
 import com.comprehensive.eureka.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RequestMapping("/user")
 @RestController
@@ -41,4 +43,9 @@ public class UserController {
         return BaseResponseDto.success(null);
     }
 
+    @GetMapping("/search")
+    public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestParam String searchWord) {
+        List<UserInfoResponseDto> users = userService.searchUsers(searchWord);
+        return BaseResponseDto.success(users);
+    }
 }
