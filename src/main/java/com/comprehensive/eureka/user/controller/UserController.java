@@ -3,6 +3,7 @@ package com.comprehensive.eureka.user.controller;
 import com.comprehensive.eureka.user.dto.base.BaseResponseDto;
 import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
+import com.comprehensive.eureka.user.dto.request.UpdateUserStatusRequestDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
 import com.comprehensive.eureka.user.dto.response.UserInfoResponseDto;
@@ -14,10 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
 import java.util.List;
 
+@Slf4j
 @RequestMapping("/user")
 @RestController
 @RequiredArgsConstructor
-@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -49,6 +50,13 @@ public class UserController {
     public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestParam String searchWord) {
         List<UserInfoResponseDto> users = userService.searchUsers(searchWord);
         return BaseResponseDto.success(users);
+    }
+
+    @PutMapping("/status")
+    public BaseResponseDto<Void> updateUserStatusAndTime(@RequestBody UpdateUserStatusRequestDto updateUserStatusRequestDto) {
+        log.info("관리자요청-사용자 상태 변경 요청 수신:{}", updateUserStatusRequestDto);
+        userService.updateUserStatusAndTime(updateUserStatusRequestDto);
+        return BaseResponseDto.success(null);
     }
 
     @PostMapping("/status-active")

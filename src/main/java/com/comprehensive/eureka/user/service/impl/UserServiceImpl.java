@@ -3,6 +3,7 @@ package com.comprehensive.eureka.user.service.impl;
 import com.comprehensive.eureka.user.dto.request.CreateUserRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
+import com.comprehensive.eureka.user.dto.request.UpdateUserStatusRequestDto;
 import com.comprehensive.eureka.user.dto.response.*;
 import com.comprehensive.eureka.user.entity.User;
 import com.comprehensive.eureka.user.entity.enums.Status;
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -81,6 +83,21 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserInfoResponseDto> searchUsers(String searchWord) {
         return userRepository.searchUsersBySearchWord(searchWord);
+    }
+
+    @Override
+    public void updateUserStatusAndTime(UpdateUserStatusRequestDto updateUserStatusRequestDto) {
+        User user = userRepository.findById(updateUserStatusRequestDto.getUserId())
+                .orElseThrow(UserNotFoundException::new);
+
+        Status oldStatus = user.getStatus();
+        LocalDateTime oldUnbanTime = user.getUnbanTime();
+
+        user.changeStatusAndTime(updateUserStatusRequestDto.getStatus(), updateUserStatusRequestDto.getUnbanTime());
+        log.info("사용자 상태 변경 - userId: {}, status: {} → {}, unbanTime: {} → {}",
+                updateUserStatusRequestDto.getUserId(),
+                oldStatus, updateUserStatusRequestDto.getStatus(),
+                oldUnbanTime, updateUserStatusRequestDto.getUnbanTime());
     }
 
     @Override
