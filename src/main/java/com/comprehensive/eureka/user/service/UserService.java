@@ -22,4 +22,6 @@ public interface UserService {
     void updateUserStatus(Long userId);
 
     List<UserInfoResponseDto> searchUsers(String searchWord);
+
+    void updateUserStatusActive(GetByEmailRequestDto getByEmailRequestDto);
 }

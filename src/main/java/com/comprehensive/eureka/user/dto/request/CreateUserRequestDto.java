@@ -25,7 +25,7 @@ public class CreateUserRequestDto {
                 .birthday(createUserRequestDto.getBirthday())
                 .phone(createUserRequestDto.getPhone())
                 .role(Role.ROLE_USER)
-                .status(Status.ACTIVE)
+                .status(Status.INACTIVE)
                 .build();
 
     }

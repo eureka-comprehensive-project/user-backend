@@ -8,6 +8,7 @@ import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
 import com.comprehensive.eureka.user.dto.response.UserInfoResponseDto;
 import com.comprehensive.eureka.user.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -16,6 +17,7 @@ import java.util.List;
 @RequestMapping("/user")
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class UserController {
     private final UserService userService;
 
@@ -47,5 +49,12 @@ public class UserController {
     public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestParam String searchWord) {
         List<UserInfoResponseDto> users = userService.searchUsers(searchWord);
         return BaseResponseDto.success(users);
+    }
+
+    @PostMapping("/status-active")
+    public BaseResponseDto<Void> updateUserStatusActive(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
+        log.info("이메일 인증 완료-사용자 상태 변경 요청 수신:{}", getByEmailRequestDto);
+        userService.updateUserStatusActive(getByEmailRequestDto);
+        return BaseResponseDto.success(null);
     }
 }
