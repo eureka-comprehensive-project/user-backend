@@ -14,4 +14,10 @@ public class GlobalExceptionHandler {
         log.error(e.getMessage(), e);
         return BaseResponseDto.fail(ErrorCode.USER_NOT_FOUND);
     }
+
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public BaseResponseDto<ErrorResponseDto> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+        log.error(e.getMessage(), e);
+        return BaseResponseDto.fail(ErrorCode.EMAIL_ALREADY_EXISTS);
+    }
 }

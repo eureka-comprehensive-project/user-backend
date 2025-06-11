@@ -5,12 +5,13 @@ import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
+import com.comprehensive.eureka.user.dto.response.UserInfoResponseDto;
 import com.comprehensive.eureka.user.service.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.List;
 
 @RequestMapping("/user")
 @RestController
@@ -28,5 +29,23 @@ public class UserController {
     public BaseResponseDto<GetUserProfileDetailResponseDto> getUserProfileDetail(@RequestBody GetByIdRequestDto getByIdRequestDto) {
         GetUserProfileDetailResponseDto getUserProfileDetailResponseDto = userService.getUserProfileDetail(getByIdRequestDto);
         return BaseResponseDto.success(getUserProfileDetailResponseDto);
+    }
+
+    @GetMapping("/{userId}/birthday")
+    public BaseResponseDto<LocalDate> getUserBirthday(@PathVariable Long userId) {
+        LocalDate birthday = userService.getUserBirthday(userId);
+        return BaseResponseDto.success(birthday);
+    }
+
+    @PutMapping("/{userId}/status")
+    public BaseResponseDto<Void> updateUserStatus(@PathVariable Long userId){
+        userService.updateUserStatus(userId);
+        return BaseResponseDto.success(null);
+    }
+
+    @GetMapping("/search")
+    public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestParam String searchWord) {
+        List<UserInfoResponseDto> users = userService.searchUsers(searchWord);
+        return BaseResponseDto.success(users);
     }
 }
