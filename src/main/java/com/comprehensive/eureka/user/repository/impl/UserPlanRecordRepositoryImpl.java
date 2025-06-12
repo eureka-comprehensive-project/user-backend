@@ -15,7 +15,6 @@ import static com.comprehensive.eureka.user.entity.QUserPlanRecord.userPlanRecor
 public class UserPlanRecordRepositoryImpl implements UserPlanRecordRepositoryCustom {
     private final JPAQueryFactory queryFactory;
 
-
     @Override
     public List<Tuple> findActivePlanBenefitsByUserIds(List<Long> userIds) {
         return queryFactory

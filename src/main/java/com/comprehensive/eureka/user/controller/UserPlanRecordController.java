@@ -19,7 +19,7 @@ import java.util.List;
 public class UserPlanRecordController {
     private final UserPlanRecordService userPlanRecordService;
 
-    @PostMapping("/active-plan-benefits")
+    @PostMapping("/user-plan-record/valid-contract")
     public BaseResponseDto<List<UserActivePlanBenefitResponseDto>> getActivePlanBenefits(@RequestBody List<Long> userIds) {
         List<UserActivePlanBenefitResponseDto> result = userPlanRecordService.getActivePlanBenefits(userIds);
         return BaseResponseDto.success(result);

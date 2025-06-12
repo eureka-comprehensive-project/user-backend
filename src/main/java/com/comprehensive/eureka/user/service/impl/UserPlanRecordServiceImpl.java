@@ -29,7 +29,7 @@ public class UserPlanRecordServiceImpl implements UserPlanRecordService {
                         tuple -> tuple.get(0, Long.class),
                         tuple -> tuple.get(1, Long.class)
                 ));
-        log.debug("조회된 혜택 매핑: {}", benefitMap);
+        log.info("조회된 혜택 매핑: {}", benefitMap);
 
         // 요청받은 모든 userId 기준으로 응답 생성 (없으면 planBenefitId = null)
         return userIds.stream()
