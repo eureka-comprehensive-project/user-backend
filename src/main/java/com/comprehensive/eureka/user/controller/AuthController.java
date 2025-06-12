@@ -26,4 +26,10 @@ public class AuthController {
         GetUserResponseDto getUserResponseDto = userService.findUserByEmail(getByEmailRequest);
         return BaseResponseDto.success(getUserResponseDto);
     }
+
+    @PostMapping("/email-check")
+    public BaseResponseDto<Boolean> emailCheck(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
+        boolean exists = userService.emailExists(getByEmailRequestDto);
+        return BaseResponseDto.success(exists); // 존재하면 true, 아니면 false
+    }
 }
