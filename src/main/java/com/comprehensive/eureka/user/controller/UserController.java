@@ -58,10 +58,4 @@ public class UserController {
         return BaseResponseDto.success(null);
     }
 
-    @PutMapping("/status-active")
-    public BaseResponseDto<Void> updateUserStatusActive(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
-        userService.updateUserStatusActive(getByEmailRequestDto);
-        return BaseResponseDto.success(null);
-    }
-
 }
