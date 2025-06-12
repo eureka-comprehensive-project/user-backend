@@ -3,6 +3,7 @@ package com.comprehensive.eureka.user.service;
 import com.comprehensive.eureka.user.dto.request.CreateUserRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
+import com.comprehensive.eureka.user.dto.request.UpdateUserStatusRequestDto;
 import com.comprehensive.eureka.user.dto.response.*;
 
 import java.time.LocalDate;
@@ -22,4 +23,8 @@ public interface UserService {
     void updateUserStatus(Long userId);
 
     List<UserInfoResponseDto> searchUsers(String searchWord);
+
+    void updateUserStatusAndTime(UpdateUserStatusRequestDto updateUserStatusRequestDto);
+
+    void updateUserStatusActive(GetByEmailRequestDto getByEmailRequestDto);
 }

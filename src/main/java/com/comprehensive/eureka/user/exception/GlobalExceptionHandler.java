@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
     @ExceptionHandler(UserNotFoundException.class)
     public BaseResponseDto<ErrorResponseDto> handleUserNotFoundException(UserNotFoundException e) {
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         return BaseResponseDto.fail(ErrorCode.USER_NOT_FOUND);
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public BaseResponseDto<ErrorResponseDto> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
-        log.error(e.getMessage(), e);
+        log.error(e.getMessage());
         return BaseResponseDto.fail(ErrorCode.EMAIL_ALREADY_EXISTS);
     }
 }

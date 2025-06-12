@@ -54,4 +54,9 @@ public class User extends BaseEntity {
             this.unbanTime = null;
         }
     }
+
+    public void changeStatusAndTime(Status status, LocalDateTime unbanTime) {
+        this.status = status;
+        this.unbanTime = unbanTime;
+    }
 }
