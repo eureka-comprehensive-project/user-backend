@@ -54,15 +54,19 @@ public class UserController {
 
     @PutMapping("/status")
     public BaseResponseDto<Void> updateUserStatusAndTime(@RequestBody UpdateUserStatusRequestDto updateUserStatusRequestDto) {
-        log.info("관리자요청-사용자 상태 변경 요청 수신:{}", updateUserStatusRequestDto);
         userService.updateUserStatusAndTime(updateUserStatusRequestDto);
         return BaseResponseDto.success(null);
     }
 
     @PutMapping("/status-active")
     public BaseResponseDto<Void> updateUserStatusActive(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
-        log.info("이메일 인증 완료-사용자 상태 변경 요청 수신:{}", getByEmailRequestDto);
         userService.updateUserStatusActive(getByEmailRequestDto);
         return BaseResponseDto.success(null);
+    }
+
+    @PostMapping("/email-check")
+    public BaseResponseDto<Boolean> emailCheck(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
+        boolean exists = userService.emailExists(getByEmailRequestDto);
+        return BaseResponseDto.success(exists); // 존재하면 true, 아니면 false
     }
 }
