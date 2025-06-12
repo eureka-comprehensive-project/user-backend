@@ -27,4 +27,6 @@ public interface UserService {
     void updateUserStatusAndTime(UpdateUserStatusRequestDto updateUserStatusRequestDto);
 
     void updateUserStatusActive(GetByEmailRequestDto getByEmailRequestDto);
+
+    Boolean emailExists(GetByEmailRequestDto getByEmailRequestDto);
 }

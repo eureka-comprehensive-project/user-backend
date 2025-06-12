@@ -109,4 +109,11 @@ public class UserServiceImpl implements UserService {
 
         log.info("사용자 활성화 - email: {}, status: INACTIVE → ACTIVE", getByEmailRequestDto.getEmail());
     }
+
+    @Override
+    public Boolean emailExists(GetByEmailRequestDto getByEmailRequestDto) {
+        String email = getByEmailRequestDto.getEmail();
+        log.info("이메일 중복 확인 요청 - email: {}", email);
+        return userRepository.existsByEmail(email);
+    }
 }
