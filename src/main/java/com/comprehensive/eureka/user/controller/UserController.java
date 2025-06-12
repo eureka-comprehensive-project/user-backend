@@ -58,4 +58,11 @@ public class UserController {
         userService.updateUserStatusAndTime(updateUserStatusRequestDto);
         return BaseResponseDto.success(null);
     }
+
+    @PutMapping("/status-active")
+    public BaseResponseDto<Void> updateUserStatusActive(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
+        log.info("이메일 인증 완료-사용자 상태 변경 요청 수신:{}", getByEmailRequestDto);
+        userService.updateUserStatusActive(getByEmailRequestDto);
+        return BaseResponseDto.success(null);
+    }
 }

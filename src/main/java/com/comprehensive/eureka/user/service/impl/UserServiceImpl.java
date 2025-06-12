@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto) {
-        Optional<User> optionalUser = userRepository.findUserByEmailAndStatus(createUserRequestDto.getEmail());
+        Optional<User> optionalUser = userRepository.findByEmail(createUserRequestDto.getEmail());
         if (optionalUser.isPresent()) {
             throw new EmailAlreadyExistsException();
         }
@@ -98,5 +98,15 @@ public class UserServiceImpl implements UserService {
                 updateUserStatusRequestDto.getUserId(),
                 oldStatus, updateUserStatusRequestDto.getStatus(),
                 oldUnbanTime, updateUserStatusRequestDto.getUnbanTime());
+    }
+
+    @Override
+    public void updateUserStatusActive(GetByEmailRequestDto getByEmailRequestDto) {
+        User user = userRepository.findByEmail(getByEmailRequestDto.getEmail())
+                .orElseThrow(UserNotFoundException::new);
+
+        user.changeStatusAndTime(Status.ACTIVE, null);
+
+        log.info("사용자 활성화 - email: {}, status: INACTIVE → ACTIVE", getByEmailRequestDto.getEmail());
     }
 }

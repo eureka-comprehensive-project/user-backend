@@ -25,4 +25,6 @@ public interface UserService {
     List<UserInfoResponseDto> searchUsers(String searchWord);
 
     void updateUserStatusAndTime(UpdateUserStatusRequestDto updateUserStatusRequestDto);
+
+    void updateUserStatusActive(GetByEmailRequestDto getByEmailRequestDto);
 }
