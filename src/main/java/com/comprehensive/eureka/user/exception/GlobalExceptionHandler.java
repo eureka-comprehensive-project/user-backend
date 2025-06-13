@@ -18,6 +18,19 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public BaseResponseDto<ErrorResponseDto> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         log.error(e.getMessage());
-        return BaseResponseDto.fail(ErrorCode.EMAIL_ALREADY_EXISTS);
+        return BaseResponseDto.fail(ErrorCode.USER_EMAIL_ALREADY_EXISTS);
+    }
+
+    @ExceptionHandler(InternalServerException.class)
+    public BaseResponseDto<ErrorResponseDto> handleInternalServerException(InternalServerException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("InternalServerException 발생 - code: {}, message: {}", errorCode.getCode(), errorCode.getMessage());
+        return BaseResponseDto.fail(errorCode);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public BaseResponseDto<ErrorResponseDto> handleUnexpectedException(Exception e) {
+        log.error("[GlobalExceptionHandler] 사용자 서버 처리 중 알 수 없는 오류 발생");
+        return BaseResponseDto.fail(ErrorCode.USER_SERVER_UNKNOWN_ERROR);
     }
 }
