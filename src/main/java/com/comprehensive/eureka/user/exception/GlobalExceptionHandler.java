@@ -18,6 +18,26 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public BaseResponseDto<ErrorResponseDto> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
         log.error(e.getMessage());
-        return BaseResponseDto.fail(ErrorCode.EMAIL_ALREADY_EXISTS);
+        return BaseResponseDto.fail(ErrorCode.USER_EMAIL_ALREADY_EXISTS);
     }
+
+    @ExceptionHandler(InternalServerException.class)
+    public BaseResponseDto<ErrorResponseDto> handleInternalServerException(InternalServerException e) {
+        ErrorCode errorCode = e.getErrorCode();
+        log.error("InternalServerException 발생 - code: {}, message: {}", errorCode.getCode(), errorCode.getMessage());
+        return BaseResponseDto.fail(errorCode);
+    }
+
+    @ExceptionHandler(DuplicateUserDataRecordException.class)
+    public BaseResponseDto<ErrorResponseDto> handleDuplicateUserDataRecordException(DuplicateUserDataRecordException e) {
+        log.error(e.getMessage());
+        return BaseResponseDto.fail(ErrorCode.USER_DATA_RECORD_DUPLICATE);
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public BaseResponseDto<ErrorResponseDto> handleInvalidRequestException(InvalidRequestException e) {
+        log.error(e.getMessage());
+        return BaseResponseDto.fail(ErrorCode.INVALID_SEARCH_REQUEST);
+    }
+
 }

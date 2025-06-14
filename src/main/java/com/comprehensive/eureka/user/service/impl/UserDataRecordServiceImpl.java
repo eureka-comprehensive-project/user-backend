@@ -5,6 +5,7 @@ import com.comprehensive.eureka.user.dto.request.UserDataRecordRequestDto;
 import com.comprehensive.eureka.user.dto.response.UserDataRecordResponseDto;
 import com.comprehensive.eureka.user.entity.User;
 import com.comprehensive.eureka.user.entity.UserDataRecord;
+import com.comprehensive.eureka.user.exception.DuplicateUserDataRecordException;
 import com.comprehensive.eureka.user.exception.UserNotFoundException;
 import com.comprehensive.eureka.user.repository.UserDataRecordRepository;
 import com.comprehensive.eureka.user.repository.UserRepository;
@@ -26,15 +27,21 @@ public class UserDataRecordServiceImpl implements UserDataRecordService {
 
     @Override
     public List<UserDataRecordResponseDto> getUserUsage(UserDataRecordRequestDto userDataRecordRequestDto) {
+        log.info("[getUserUsage] 사용자 사용량 조회 요청");
+        userRepository.findById(userDataRecordRequestDto.getUserId()).orElseThrow(UserNotFoundException::new);
         return userDataRecordRepository.findUserUsage(userDataRecordRequestDto.getUserId(), userDataRecordRequestDto.getMonthCount());
     }
 
     @Override
     public void createUserDataRecord(CreateUserDataRecordRequestDto createUserDataRecordRequestDto) {
         Long userId = createUserDataRecordRequestDto.getUserId();
-        log.info("사용자 사용량 기록 저장 요청 - userId: {}", userId);
+        log.info("[createUserDataRecord] 사용자 사용량 기록 저장 요청 - userId: {}", userId);
 
         User user = userRepository.findById(userId).orElseThrow(UserNotFoundException::new);
+
+        if (userDataRecordRepository.existsByUserIdAndYearMonth(userId, createUserDataRecordRequestDto.getYearMonth())) {
+            throw new DuplicateUserDataRecordException();
+        }
 
         userDataRecordRepository.save(UserDataRecord.builder()
                 .user(user)
@@ -45,6 +52,6 @@ public class UserDataRecordServiceImpl implements UserDataRecordService {
                 .yearMonth(createUserDataRecordRequestDto.getYearMonth())
                 .build());
 
-        log.info("사용량 기록 저장 완료 - userId: {}", userId);
+        log.info("[createUserDataRecord] 사용량 기록 저장 완료 - userId: {}", userId);
     }
 }

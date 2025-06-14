@@ -8,6 +8,8 @@ import com.comprehensive.eureka.user.dto.response.*;
 import com.comprehensive.eureka.user.entity.User;
 import com.comprehensive.eureka.user.entity.enums.Status;
 import com.comprehensive.eureka.user.exception.EmailAlreadyExistsException;
+import com.comprehensive.eureka.user.exception.ErrorCode;
+import com.comprehensive.eureka.user.exception.InternalServerException;
 import com.comprehensive.eureka.user.exception.UserNotFoundException;
 import com.comprehensive.eureka.user.repository.UserRepository;
 import com.comprehensive.eureka.user.service.UserService;
@@ -30,19 +32,28 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto) {
+        log.info("[createUser] 사용자 등록 요청");
+
         Optional<User> optionalUser = userRepository.findByEmail(createUserRequestDto.getEmail());
         if (optionalUser.isPresent()) {
             throw new EmailAlreadyExistsException();
         }
 
-        User user = userRepository.save(CreateUserRequestDto.toEntity(createUserRequestDto));
-        return CreateUserResponseDto.builder()
-                .id(user.getId())
-                .build();
+        try{
+            User user = userRepository.save(CreateUserRequestDto.toEntity(createUserRequestDto));
+            return CreateUserResponseDto.builder()
+                    .id(user.getId())
+                    .build();
+        } catch (Exception e) {
+            throw new InternalServerException(ErrorCode.USER_CREATE_FAIL);
+        }
+
     }
 
     @Override
     public GetUserResponseDto findUserByEmail(GetByEmailRequestDto getByEmailRequest) {
+        log.info("[findUserByEmail] 사용자 조회 요청");
+
         return GetUserResponseDto.from(
                 userRepository.findUserByEmailAndStatus(getByEmailRequest.getEmail()).orElseThrow(
                         UserNotFoundException::new)
@@ -51,6 +62,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetUserProfileResponseDto getUserProfile(GetByIdRequestDto getByIdRequestDto){
+        log.info("[getUserProfile] 프로필 조회 요청");
         return GetUserProfileResponseDto.from(
                 userRepository.findById(getByIdRequestDto.getId()).orElseThrow(
                         UserNotFoundException::new)
@@ -59,6 +71,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public GetUserProfileDetailResponseDto getUserProfileDetail(GetByIdRequestDto getByIdRequestDto){
+        log.info("[getUserProfileDetail] 상세 프로필 조회 요청");
         return GetUserProfileDetailResponseDto.from(
                 userRepository.findById(getByIdRequestDto.getId()).orElseThrow(
                         UserNotFoundException::new)
@@ -67,6 +80,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public LocalDate getUserBirthday(Long userId) {
+        log.info("[getUserBirthday] 생년월일 조회 요청");
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
         return user.getBirthday();
@@ -74,19 +88,24 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserStatus(Long userId) {
+        log.info("[updateUserStatus] 사용자 상태 변경 요청");
         User user = userRepository.findById(userId)
                 .orElseThrow(UserNotFoundException::new);
 
+        Status oldStatus = user.getStatus();
         user.changeStatus();
+        log.info("[updateUserStatus] 상태 변경 완료 - userId: {}, {} → {}", userId, oldStatus, user.getStatus());
     }
 
     @Override
     public List<UserInfoResponseDto> searchUsers(String searchWord) {
+        log.info("[searchUsers] 사용자 검색 요청");
         return userRepository.searchUsersBySearchWord(searchWord);
     }
 
     @Override
     public void updateUserStatusAndTime(UpdateUserStatusRequestDto updateUserStatusRequestDto) {
+        log.info("[updateUserStatusAndTime] 상태/차단해제시간 변경 요청");
         User user = userRepository.findById(updateUserStatusRequestDto.getUserId())
                 .orElseThrow(UserNotFoundException::new);
 
@@ -94,7 +113,7 @@ public class UserServiceImpl implements UserService {
         LocalDateTime oldUnbanTime = user.getUnbanTime();
 
         user.changeStatusAndTime(updateUserStatusRequestDto.getStatus(), updateUserStatusRequestDto.getUnbanTime());
-        log.info("사용자 상태 변경 - userId: {}, status: {} → {}, unbanTime: {} → {}",
+        log.info("[updateUserStatusAndTime] 사용자 상태 변경 - userId: {}, status: {} → {}, unbanTime: {} → {}",
                 updateUserStatusRequestDto.getUserId(),
                 oldStatus, updateUserStatusRequestDto.getStatus(),
                 oldUnbanTime, updateUserStatusRequestDto.getUnbanTime());
@@ -102,18 +121,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateUserStatusActive(GetByEmailRequestDto getByEmailRequestDto) {
+        log.info("[updateUserStatusActive] 이메일 인증 롼료 사용자 활성화 요청");
         User user = userRepository.findByEmail(getByEmailRequestDto.getEmail())
                 .orElseThrow(UserNotFoundException::new);
 
         user.changeStatusAndTime(Status.ACTIVE, null);
 
-        log.info("사용자 활성화 - email: {}, status: INACTIVE → ACTIVE", getByEmailRequestDto.getEmail());
+        log.info("[updateUserStatusActive] 사용자 활성화 - email: {}", getByEmailRequestDto.getEmail());
     }
 
     @Override
     public Boolean emailExists(GetByEmailRequestDto getByEmailRequestDto) {
         String email = getByEmailRequestDto.getEmail();
-        log.info("이메일 중복 확인 요청 - email: {}", email);
+        log.info("[emailExists] 이메일 중복 확인 요청 - email: {}", email);
         return userRepository.existsByEmail(email);
     }
 }

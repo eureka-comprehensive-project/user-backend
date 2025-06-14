@@ -1,12 +1,12 @@
 package com.comprehensive.eureka.user.controller;
 
 import com.comprehensive.eureka.user.dto.base.BaseResponseDto;
-import com.comprehensive.eureka.user.dto.request.GetByEmailRequestDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
 import com.comprehensive.eureka.user.dto.request.UpdateUserStatusRequestDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
 import com.comprehensive.eureka.user.dto.response.UserInfoResponseDto;
+import com.comprehensive.eureka.user.exception.InvalidRequestException;
 import com.comprehensive.eureka.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,10 @@ public class UserController {
     }
 
     @GetMapping("/search")
-    public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestParam String searchWord) {
+    public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestParam(required = false) String searchWord) {
+        if (searchWord == null || searchWord.trim().isEmpty()) {
+            throw new InvalidRequestException();
+        }
         List<UserInfoResponseDto> users = userService.searchUsers(searchWord);
         return BaseResponseDto.success(users);
     }
@@ -58,15 +61,4 @@ public class UserController {
         return BaseResponseDto.success(null);
     }
 
-    @PutMapping("/status-active")
-    public BaseResponseDto<Void> updateUserStatusActive(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
-        userService.updateUserStatusActive(getByEmailRequestDto);
-        return BaseResponseDto.success(null);
-    }
-
-    @PostMapping("/email-check")
-    public BaseResponseDto<Boolean> emailCheck(@RequestBody GetByEmailRequestDto getByEmailRequestDto){
-        boolean exists = userService.emailExists(getByEmailRequestDto);
-        return BaseResponseDto.success(exists); // 존재하면 true, 아니면 false
-    }
 }
