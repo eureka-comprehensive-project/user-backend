@@ -5,5 +5,5 @@ import com.comprehensive.eureka.user.repository.custom.UserDataRecordRepositoryC
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserDataRecordRepository extends JpaRepository<UserDataRecord, Long>, UserDataRecordRepositoryCustom {
-
+    boolean existsByUserIdAndYearMonth(Long userId, String yearMonth);
 }

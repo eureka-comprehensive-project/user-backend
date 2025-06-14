@@ -26,6 +26,7 @@ public class CreateUserRequestDto {
                 .phone(createUserRequestDto.getPhone())
                 .role(Role.ROLE_USER)
                 .status(Status.INACTIVE)
+                .unbanTime(null)
                 .build();
 
     }
