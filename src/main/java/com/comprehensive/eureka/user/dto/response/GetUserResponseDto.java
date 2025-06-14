@@ -8,12 +8,14 @@ import lombok.Data;
 @Data
 @Builder
 public class GetUserResponseDto {
+    private Long userId; // 사용자 고유 아이디 값
     private String email; // 아이디에 사용될 값
     private String password; // 비밀번호 (암호화된 값)
     private Role role; // 역할 (일반사용자, 관리자)
 
     public static GetUserResponseDto from(User user) {
         return GetUserResponseDto.builder()
+                .userId(user.getId())
                 .email(user.getEmail())
                 .password(user.getPassword())
                 .role(user.getRole())
