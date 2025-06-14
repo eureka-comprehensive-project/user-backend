@@ -28,9 +28,16 @@ public class GlobalExceptionHandler {
         return BaseResponseDto.fail(errorCode);
     }
 
-    @ExceptionHandler(Exception.class)
-    public BaseResponseDto<ErrorResponseDto> handleUnexpectedException(Exception e) {
-        log.error("[GlobalExceptionHandler] 사용자 서버 처리 중 알 수 없는 오류 발생");
-        return BaseResponseDto.fail(ErrorCode.USER_SERVER_UNKNOWN_ERROR);
+    @ExceptionHandler(DuplicateUserDataRecordException.class)
+    public BaseResponseDto<ErrorResponseDto> handleDuplicateUserDataRecordException(DuplicateUserDataRecordException e) {
+        log.error(e.getMessage());
+        return BaseResponseDto.fail(ErrorCode.USER_DATA_RECORD_DUPLICATE);
     }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public BaseResponseDto<ErrorResponseDto> handleInvalidRequestException(InvalidRequestException e) {
+        log.error(e.getMessage());
+        return BaseResponseDto.fail(ErrorCode.INVALID_SEARCH_REQUEST);
+    }
+
 }
