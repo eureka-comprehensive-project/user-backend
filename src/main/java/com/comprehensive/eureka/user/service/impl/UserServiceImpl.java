@@ -136,4 +136,11 @@ public class UserServiceImpl implements UserService {
         log.info("[emailExists] 이메일 중복 확인 요청 - email: {}", email);
         return userRepository.existsByEmail(email);
     }
+
+    @Override
+    @Transactional
+    public void unbanExpiredUsers() {
+        long updateCount = userRepository.bulkUnbanUsers(LocalDateTime.now());
+        log.info("[unbanExpireUsers] 총 {} 명의 사용자 차단 해제 완료", updateCount);
+    }
 }
