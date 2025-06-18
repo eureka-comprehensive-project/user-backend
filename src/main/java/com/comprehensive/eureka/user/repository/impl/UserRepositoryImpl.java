@@ -6,6 +6,7 @@ import com.comprehensive.eureka.user.entity.enums.Status;
 import com.comprehensive.eureka.user.repository.custom.UserRepositoryCustom;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
+import java.time.LocalDateTime;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -51,5 +52,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .or(user.email.containsIgnoreCase(searchWord))
                 )
                 .fetch();
+    }
+
+    @Override
+    public long bulkUnbanUsers(LocalDateTime now) {
+        return queryFactory
+                .update(user)
+                .set(user.status, Status.ACTIVE)
+                .set(user.unbanTime, (LocalDateTime) null)
+                .where(
+                        user.status.eq(Status.INACTIVE),
+                        user.unbanTime.lt(now)
+                )
+                .execute();
     }
 }
