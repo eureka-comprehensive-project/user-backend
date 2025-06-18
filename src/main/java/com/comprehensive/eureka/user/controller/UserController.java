@@ -2,6 +2,7 @@ package com.comprehensive.eureka.user.controller;
 
 import com.comprehensive.eureka.user.dto.base.BaseResponseDto;
 import com.comprehensive.eureka.user.dto.request.GetByIdRequestDto;
+import com.comprehensive.eureka.user.dto.request.SearchWordRequestDto;
 import com.comprehensive.eureka.user.dto.request.UpdateUserStatusRequestDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileDetailResponseDto;
 import com.comprehensive.eureka.user.dto.response.GetUserProfileResponseDto;
@@ -46,8 +47,9 @@ public class UserController {
         return BaseResponseDto.success(null);
     }
 
-    @GetMapping("/search")
-    public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestParam(required = false) String searchWord) {
+    @PostMapping("/search")
+    public BaseResponseDto<List<UserInfoResponseDto>> searchUsers(@RequestBody SearchWordRequestDto request) {
+        String searchWord = request.getSearchWord();
         if (searchWord == null || searchWord.trim().isEmpty()) {
             throw new InvalidRequestException();
         }
