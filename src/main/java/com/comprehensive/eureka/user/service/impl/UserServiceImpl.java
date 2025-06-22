@@ -101,7 +101,7 @@ public class UserServiceImpl implements UserService {
          * 차단인 경우 > 레디스에 해당 사용자 값 등록
          * 해제인 경우 > 레디스에 해당 사용자 값 삭제
          */
-        if (oldStatus.equals(Status.INACTIVE)) {
+        if (!oldStatus.equals(Status.INACTIVE)) {
             redisService.save("blacklist:user:" + user.getId(), "blocked", 3600);
             log.info("save >>> blacklist:user:" + user.getId());
         } else {
