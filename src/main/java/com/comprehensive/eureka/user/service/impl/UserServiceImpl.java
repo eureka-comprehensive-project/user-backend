@@ -126,8 +126,10 @@ public class UserServiceImpl implements UserService {
          */
         if (user.getStatus().equals(Status.INACTIVE)) {
             redisService.save("blacklist:user:" + updateUserStatusRequestDto.getUserId(), "blocked", 3600);
+            log.info("save >>>> blacklist:user:" + updateUserStatusRequestDto.getUserId());
         } else {
             redisService.delete("blacklist:user:" + updateUserStatusRequestDto.getUserId());
+            log.info("delete >>>> blacklist:user:" + updateUserStatusRequestDto.getUserId());
         }
     }
 
