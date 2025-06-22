@@ -12,6 +12,7 @@ import com.comprehensive.eureka.user.exception.ErrorCode;
 import com.comprehensive.eureka.user.exception.InternalServerException;
 import com.comprehensive.eureka.user.exception.UserNotFoundException;
 import com.comprehensive.eureka.user.repository.UserRepository;
+import com.comprehensive.eureka.user.service.RedisService;
 import com.comprehensive.eureka.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import java.util.Optional;
 @Slf4j
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final RedisService redisService;
 
     @Override
     public CreateUserResponseDto createUser(CreateUserRequestDto createUserRequestDto) {
@@ -39,7 +41,7 @@ public class UserServiceImpl implements UserService {
             throw new EmailAlreadyExistsException();
         }
 
-        try{
+        try {
             User user = userRepository.save(CreateUserRequestDto.toEntity(createUserRequestDto));
             return CreateUserResponseDto.builder()
                     .id(user.getId())
@@ -61,7 +63,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserProfileResponseDto getUserProfile(GetByIdRequestDto getByIdRequestDto){
+    public GetUserProfileResponseDto getUserProfile(GetByIdRequestDto getByIdRequestDto) {
         log.info("[getUserProfile] 프로필 조회 요청");
         return GetUserProfileResponseDto.from(
                 userRepository.findById(getByIdRequestDto.getId()).orElseThrow(
@@ -70,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public GetUserProfileDetailResponseDto getUserProfileDetail(GetByIdRequestDto getByIdRequestDto){
+    public GetUserProfileDetailResponseDto getUserProfileDetail(GetByIdRequestDto getByIdRequestDto) {
         log.info("[getUserProfileDetail] 상세 프로필 조회 요청");
         return GetUserProfileDetailResponseDto.from(
                 userRepository.findById(getByIdRequestDto.getId()).orElseThrow(
@@ -117,6 +119,16 @@ public class UserServiceImpl implements UserService {
                 updateUserStatusRequestDto.getUserId(),
                 oldStatus, updateUserStatusRequestDto.getStatus(),
                 oldUnbanTime, updateUserStatusRequestDto.getUnbanTime());
+
+        /**
+         * 차단인 경우 > 레디스에 해당 사용자 값 등록
+         * 해제인 경우 > 레디스에 해당 사용자 값 삭제
+         */
+        if (user.getStatus().equals(Status.INACTIVE)) {
+            redisService.save("blacklist:user:" + updateUserStatusRequestDto.getUserId(), "blocked", 3600);
+        } else {
+            redisService.delete("blacklist:user:" + updateUserStatusRequestDto.getUserId());
+        }
     }
 
     @Override
