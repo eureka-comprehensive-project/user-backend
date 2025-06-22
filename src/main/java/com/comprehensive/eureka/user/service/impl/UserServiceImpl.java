@@ -96,6 +96,19 @@ public class UserServiceImpl implements UserService {
 
         Status oldStatus = user.getStatus();
         user.changeStatus();
+        // TODO
+        /**
+         * 차단인 경우 > 레디스에 해당 사용자 값 등록
+         * 해제인 경우 > 레디스에 해당 사용자 값 삭제
+         */
+        if (oldStatus.equals(Status.INACTIVE)) {
+            redisService.save("blacklist:user:" + user.getId(), "blocked", 3600);
+            log.info("save >>> blacklist:user:" + user.getId());
+        } else {
+            redisService.delete("blacklist:user:" + user.getId());
+            log.info("delete >>> blacklist:user:" + user.getId());
+        }
+
         log.info("[updateUserStatus] 상태 변경 완료 - userId: {}, {} → {}", userId, oldStatus, user.getStatus());
     }
 
@@ -119,18 +132,6 @@ public class UserServiceImpl implements UserService {
                 updateUserStatusRequestDto.getUserId(),
                 oldStatus, updateUserStatusRequestDto.getStatus(),
                 oldUnbanTime, updateUserStatusRequestDto.getUnbanTime());
-
-        /**
-         * 차단인 경우 > 레디스에 해당 사용자 값 등록
-         * 해제인 경우 > 레디스에 해당 사용자 값 삭제
-         */
-        if (user.getStatus().equals(Status.INACTIVE)) {
-            redisService.save("blacklist:user:" + updateUserStatusRequestDto.getUserId(), "blocked", 3600);
-            log.info("save >>>> blacklist:user:" + updateUserStatusRequestDto.getUserId());
-        } else {
-            redisService.delete("blacklist:user:" + updateUserStatusRequestDto.getUserId());
-            log.info("delete >>>> blacklist:user:" + updateUserStatusRequestDto.getUserId());
-        }
     }
 
     @Override
