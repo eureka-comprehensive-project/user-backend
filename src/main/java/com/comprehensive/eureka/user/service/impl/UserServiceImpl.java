@@ -158,4 +158,14 @@ public class UserServiceImpl implements UserService {
         long updateCount = userRepository.bulkUnbanUsers(LocalDateTime.now());
         log.info("[unbanExpireUsers] 총 {} 명의 사용자 차단 해제 완료", updateCount);
     }
+
+    @Override
+    public GetUserResponseDto findOAuthUserByEmail(GetByEmailRequestDto getByEmailRequest) {
+        log.info("[findOAuthUserByEmail] 사용자 조회 요청");
+
+        return GetUserResponseDto.from(
+                userRepository.findOAuthUserByEmail(getByEmailRequest.getEmail()).orElseThrow(
+                        UserNotFoundException::new)
+        );
+    }
 }

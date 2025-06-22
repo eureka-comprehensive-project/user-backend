@@ -38,4 +38,11 @@ public class AuthController {
         userService.updateUserStatusActive(getByEmailRequestDto);
         return BaseResponseDto.success(null);
     }
+
+
+    @PostMapping("/oauth-email")
+    public BaseResponseDto<GetUserResponseDto> getOAuthByEmail(@RequestBody GetByEmailRequestDto getByEmailRequest) {
+        GetUserResponseDto getUserResponseDto = userService.findOAuthUserByEmail(getByEmailRequest);
+        return BaseResponseDto.success(getUserResponseDto);
+    }
 }

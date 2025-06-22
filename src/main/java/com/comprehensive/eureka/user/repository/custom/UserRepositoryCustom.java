@@ -9,6 +9,7 @@ import java.util.Optional;
 
 public interface UserRepositoryCustom {
     Optional<User> findUserByEmailAndStatus(String email);
+    Optional<User> findOAuthUserByEmail(String email);
     List<UserInfoResponseDto> searchUsersBySearchWord(String searchWord);
     long bulkUnbanUsers(LocalDateTime now);
 }
