@@ -9,6 +9,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,17 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                         .where(
                                 user.email.eq(email),
                                 user.status.eq(Status.ACTIVE)
+                        )
+                        .fetchOne()
+        );
+    }
+
+    @Override
+    public Optional<User> findOAuthUserByEmail(String email) {
+        return Optional.ofNullable(
+                queryFactory.selectFrom(user)
+                        .where(
+                                user.email.eq(email)
                         )
                         .fetchOne()
         );
@@ -51,5 +63,18 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
                                 .or(user.email.containsIgnoreCase(searchWord))
                 )
                 .fetch();
+    }
+
+    @Override
+    public long bulkUnbanUsers(LocalDateTime now) {
+        return queryFactory
+                .update(user)
+                .set(user.status, Status.ACTIVE)
+                .set(user.unbanTime, (LocalDateTime) null)
+                .where(
+                        user.status.eq(Status.INACTIVE),
+                        user.unbanTime.lt(now)
+                )
+                .execute();
     }
 }

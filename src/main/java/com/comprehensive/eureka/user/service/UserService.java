@@ -29,4 +29,8 @@ public interface UserService {
     void updateUserStatusActive(GetByEmailRequestDto getByEmailRequestDto);
 
     Boolean emailExists(GetByEmailRequestDto getByEmailRequestDto);
+
+    void unbanExpiredUsers();
+
+    GetUserResponseDto findOAuthUserByEmail(GetByEmailRequestDto getByEmailRequest);
 }
