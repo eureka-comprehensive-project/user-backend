@@ -11,10 +11,9 @@
 | --- | --- |
 | 프레임워크 | Spring Boot 3.5.0 |
 | ORM | Spring Data JPA (Hibernate) |
-| 보안 | Spring Security, JWT |
 | DB | MySQL, Redis |
 | 유틸 | Lombok |
-| 테스트 | Spring Boot Test, Spring Security Test, JUnit |
+| 테스트 | Spring Boot Test, JUnit |
 
 # 🎯 사용자 모듈의 엔티티 구조 
 - **User**: 사용자 정보를 저장하는 엔티티
