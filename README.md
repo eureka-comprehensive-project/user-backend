@@ -1,12 +1,10 @@
 # 📌 요기 U+
-> 요금제를 기가막히게 추천해줘 U+
+요금제를 기가막히게 추천해줘 U+
 
-# 🧾 프로젝트 소개  
-통신 이용 데이터를 기반으로 사용자 유형을 분류하고, 요금제 정보를 통합하여 비교/추천하는 서비스를 구현함으로써, 사용자들에게 통신 상품 선택을 돕는 것을 목표로 합니다.
+# 🧾 사용자 모듈 소개  
+사용자 개인정보, 가입 요금제, 통신 사용량을 관리합니다.
 
-# 🎯 주요 기능  
-- ✅ 기능 1: 사용자정보를 기반으로 유플러스 요금제에 대한 정보 제공
-- ✅ 기능 2: 정보 제공 시 챗봇형식으로 사용자 친화적으로 제공
+금칙어 정책 위반으로 차단된 사용자는 지정된 해제 시간이 되면 스케줄러에 의해 자동으로 차단이 해제됩니다.
 
 # 🛠 사용 기술  
 | 언어 | Java 17 |
@@ -14,17 +12,30 @@
 | 프레임워크 | Spring Boot 3.5.0 |
 | ORM | Spring Data JPA (Hibernate) |
 | 보안 | Spring Security, JWT |
-| DB | MySQL |
+| DB | MySQL, Redis |
 | 유틸 | Lombok |
 | 테스트 | Spring Boot Test, Spring Security Test, JUnit |
 
-# 🧑‍🤝‍🧑 팀 정보  
-| 이름 | 역할 | 담당 업무 |
-|------|------|-------------|
-| 서보인 | 팀장 | 인프라 구축, 인증/인가 모듈 |
-| 정현경 | 백엔드 개발자 | 사용자, 요금제, 채팅 모듈 |
-| 변지민 | 백엔드 개발자 | 사용자, 요금제, 채팅 모듈 |
-| 이종규 | 백엔드 개발자 | 추천 시스템 모듈 |
-| 김시헌 | 백엔드 개발자 | 챗봇 모듈 |
-| 김정민 | 백엔드 개발자 | 챗봇 모듈 |
-| 정유민 | 백엔드 개발자 | 관리자 모듈 |
+# 🎯 사용자 모듈의 엔티티 구조 
+- **User**: 사용자 정보를 저장하는 엔티티
+- **UserPlanRecord**: 사용자의 요금제 가입 기록을 저장하는 엔티티
+- **UserDataRecord**: 사용자의 통신 사용량 데이터 기록을 저장하는 엔티티
+
+# :clipboard:  API 엔드포인트
+|메서드|경로|설명|
+|------|---|---|
+|POST|/user/|사용자 등록|
+|POST|/user/email|사용자 정보 조회(인증 모듈)|
+|POST|/user/email-check|회원 가입 시 이메일 중복 체크|
+|PUT|/user/status-active|이메일 인증 후 사용자 상태 활성화|
+|POST|/user/profile|이름, 전화번호 조회|
+|POST|/user/profileDetail|사용자 정보 상세 조회|
+|GET|/user/{userId}/birthday|생년월일 반환|
+|PUT|/user/{userId}/status|사용자 상태 변경(강제 차단)|
+|PUT|/user/status|사용자 상태, 차단 해제 시간 변경|
+|POST|/user/search|이름이나 이메일로 사용자 검색|
+|POST|/user/user-data-record|사용자의 통신 사용량 등록|
+|POST|/user/user-data-record/usage|사용자의 통신 사용량 조회|
+|POST|/user/user-plan-record|요금제 가입, 변경|
+|POST|/user/user-plan-record/valid-contract|이용 중인 요금제 조회|
+

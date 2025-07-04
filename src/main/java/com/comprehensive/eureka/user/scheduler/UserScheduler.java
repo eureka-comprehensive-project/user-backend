@@ -13,7 +13,7 @@ public class UserScheduler {
 
     private final UserService userService;
 
-    @Scheduled(cron = "10 0 14 * * *")
+    @Scheduled(cron = "0 0 0 * * *")
     public void unbanUserScheduler() {
         log.info("사용자 차단 해제 스케줄러 시작...");
         userService.unbanExpiredUsers();
