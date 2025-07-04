@@ -174,15 +174,6 @@ public class UserIntegrationTest {
     }
 
 
-//    @Test
-//    @DisplayName("검색어 없이 사용자 검색 시 예외 발생")
-//    void searchUsers_withoutSearchWord_thenThrowBadRequest() throws Exception {
-//        mockMvc.perform(get("/user/search"))
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.statusCode").value(50005))
-//                .andExpect(jsonPath("$.data.detailMessage").value("검색어를 입력해 주세요."));
-//    }
-
     @Test
     @DisplayName("사용자 상태 변경 요청 성공")
     void updateUserStatus_thenSuccess() throws Exception {
@@ -227,7 +218,6 @@ public class UserIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
 
-        // 등록된 사용자 ID 추출 (Optional)
         BaseResponseDto<CreateUserResponseDto> response = objectMapper.readValue(
                 result.getResponse().getContentAsString(),
                 new TypeReference<>() {}
